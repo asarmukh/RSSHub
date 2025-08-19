@@ -5,7 +5,7 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN go build -o rsshub main.go
+RUN go build -o rsshub ./cmd/rsshub
 
 # final runtime container
 FROM debian:bookworm-slim

@@ -16,10 +16,11 @@ import (
 
 	_ "github.com/lib/pq"
 
-	"rsshub/internal/aggregator"
+	"rsshub/adapter/postgres"
+	rss "rsshub/adapter/rss"
+	"rsshub/app"
+	"rsshub/cli/control"
 	"rsshub/internal/config"
-	"rsshub/internal/control"
-	"rsshub/internal/db"
 )
 
 func main() {
@@ -111,11 +112,12 @@ func cmdFetch(args []string) error {
 	}
 	defer database.Close()
 
-	if err := db.RunMigrations(database); err != nil {
-		return fmt.Errorf("migrations failed: %w", err)
+	repo := postgres.New(database)
+	if err := repo.Ensure(context.Background()); err != nil {
+		return fmt.Errorf("db ensure failed: %w", err)
 	}
-
-	agg := aggregator.New(database, cfg.DefaultInterval, cfg.DefaultWorkers)
+	fetcher := rss.NewHTTPFetcher()
+	agg := app.NewAggregator(repo, fetcher, cfg.DefaultInterval, cfg.DefaultWorkers)
 	ctrl := control.NewServer(agg)
 
 	ctx, cancel := signal.NotifyContext(context.Background(), syscall.SIGINT, syscall.SIGTERM)
@@ -155,10 +157,11 @@ func cmdAdd(args []string) error {
 		return err
 	}
 	defer database.Close()
-	if err := db.Ensure(database); err != nil {
+	repo := postgres.New(database)
+	if err := repo.Ensure(context.Background()); err != nil {
 		return err
 	}
-	if err := db.AddFeed(database, name, url); err != nil {
+	if err := repo.AddFeed(context.Background(), name, url); err != nil {
 		return err
 	}
 	return nil
@@ -177,10 +180,11 @@ func cmdList(args []string) error {
 		return err
 	}
 	defer database.Close()
-	if err := db.Ensure(database); err != nil {
+	repo := postgres.New(database)
+	if err := repo.Ensure(context.Background()); err != nil {
 		return err
 	}
-	feeds, err := db.ListFeeds(database, num)
+	feeds, err := repo.ListFeeds(context.Background(), num)
 	if err != nil {
 		return err
 	}
@@ -207,10 +211,11 @@ func cmdDelete(args []string) error {
 		return err
 	}
 	defer database.Close()
-	if err := db.Ensure(database); err != nil {
+	repo := postgres.New(database)
+	if err := repo.Ensure(context.Background()); err != nil {
 		return err
 	}
-	return db.DeleteFeed(database, name)
+	return repo.DeleteFeed(context.Background(), name)
 }
 
 func cmdArticles(args []string) error {
@@ -231,14 +236,15 @@ func cmdArticles(args []string) error {
 		return err
 	}
 	defer database.Close()
-	if err := db.Ensure(database); err != nil {
+	repo := postgres.New(database)
+	if err := repo.Ensure(context.Background()); err != nil {
 		return err
 	}
-	feed, err := db.GetFeedByName(database, feedName)
+	feed, err := repo.GetFeedByName(context.Background(), feedName)
 	if err != nil {
 		return err
 	}
-	arts, err := db.ListArticlesByFeed(database, feed.ID, num)
+	arts, err := repo.ListArticlesByFeed(context.Background(), feed.ID, num)
 	if err != nil {
 		return err
 	}
@@ -300,5 +306,3 @@ func openDB(cfg config.Config) (*sql.DB, error) {
 	}
 	return dbConn, nil
 }
-
-
