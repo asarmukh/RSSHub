@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_DB: rsshub
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data      
+      
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d rsshub"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  rsshub:
+    build: .
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: changeme
+      POSTGRES_DBNAME: rsshub
+      CLI_APP_TIMER_INTERVAL: 3m
+      CLI_APP_WORKERS_COUNT: 3
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: ["./rsshub", "--help"]
+
+volumes:
+  postgres_data:
