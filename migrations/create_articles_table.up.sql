@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS articles (
     link TEXT NOT NULL,
     published_at TIMESTAMP NOT NULL,
     description TEXT NOT NULL,
-    feed_id UUID NOT NULL REFERENCES feeds(id),
+    feed_id UUID NOT NULL REFERENCES feeds(id) ON DELETE CASCADE,
     UNIQUE (feed_id, link)
 );
 

@@ -9,7 +9,7 @@ import (
 type FeedRepository interface {
 	Ensure(ctx context.Context) error
 	AddFeed(ctx context.Context, name, url string) error
-	DeleteFeed(ctx context.Context, name string) error
+	DeleteFeed(ctx context.Context, name string) (int64, error)
 	ListFeeds(ctx context.Context, limit int) ([]Feed, error)
 	GetFeedByName(ctx context.Context, name string) (Feed, error)
 	ListArticlesByFeed(ctx context.Context, feedID string, limit int) ([]Article, error)

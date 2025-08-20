@@ -3,9 +3,8 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"time"
-
 	"rsshub/domain"
+	"time"
 )
 
 type Repository struct{ db *sql.DB }
@@ -46,9 +45,18 @@ func (r *Repository) AddFeed(ctx context.Context, name, url string) error {
 	return err
 }
 
-func (r *Repository) DeleteFeed(ctx context.Context, name string) error {
-	_, err := r.db.ExecContext(ctx, `DELETE FROM feeds WHERE name = $1`, name)
-	return err
+func (r *Repository) DeleteFeed(ctx context.Context, name string) (int64, error) {
+	res, err := r.db.ExecContext(ctx, `DELETE FROM feeds WHERE name = $1`, name)
+	if err != nil {
+		return 0, err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return 0, err
+	}
+
+	return rows, nil
 }
 
 func (r *Repository) ListFeeds(ctx context.Context, limit int) ([]domain.Feed, error) {

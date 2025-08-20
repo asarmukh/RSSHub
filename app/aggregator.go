@@ -3,10 +3,9 @@ package app
 import (
 	"context"
 	"errors"
+	"rsshub/domain"
 	"sync"
 	"time"
-
-	"rsshub/domain"
 )
 
 type AggregatorService struct {
