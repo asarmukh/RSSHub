@@ -5,10 +5,11 @@ import (
 	"flag"
 	"fmt"
 	"net/url"
+	"strings"
+
 	"rsshub/adapter/postgres"
 	"rsshub/internal/config"
 	"rsshub/internal/db"
-	"strings"
 )
 
 func Add(args []string) error {

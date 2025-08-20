@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+
 	"rsshub/adapter/postgres"
 	"rsshub/internal/config"
 	"rsshub/internal/db"

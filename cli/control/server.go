@@ -6,8 +6,9 @@ import (
 	"fmt"
 	"net"
 	"net/http"
-	"rsshub/domain"
 	"time"
+
+	"rsshub/domain"
 )
 
 var ErrAlreadyRunning = errors.New("already running")

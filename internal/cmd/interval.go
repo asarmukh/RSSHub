@@ -3,9 +3,10 @@ package cmd
 import (
 	"flag"
 	"fmt"
+	"time"
+
 	"rsshub/cli/control"
 	"rsshub/internal/config"
-	"time"
 )
 
 func SetInterval(args []string) error {

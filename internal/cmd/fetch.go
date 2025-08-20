@@ -7,13 +7,14 @@ import (
 	"log"
 	"net/http"
 	"os/signal"
+	"syscall"
+
 	"rsshub/adapter/postgres"
 	"rsshub/adapter/rss"
 	"rsshub/app"
 	"rsshub/cli/control"
 	"rsshub/internal/config"
 	"rsshub/internal/db"
-	"syscall"
 )
 
 func Fetch(args []string) error {

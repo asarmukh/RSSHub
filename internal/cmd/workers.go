@@ -3,6 +3,7 @@ package cmd
 import (
 	"flag"
 	"fmt"
+
 	"rsshub/cli/control"
 	"rsshub/internal/config"
 )
