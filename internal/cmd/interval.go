@@ -3,10 +3,9 @@ package cmd
 import (
 	"flag"
 	"fmt"
-	"time"
-
 	"rsshub/cli/control"
 	"rsshub/internal/config"
+	"time"
 )
 
 func SetInterval(args []string) error {
@@ -30,6 +29,12 @@ func SetInterval(args []string) error {
 	if err != nil {
 		return fmt.Errorf("could not set interval: %w", err)
 	}
+
+	if old == d {
+		fmt.Printf("Interval is already set to %s (no change)\n", d.String())
+		return nil
+	}
+
 	fmt.Printf("Interval of fetching feeds changed from %s to %s\n", old.String(), d.String())
 	return nil
 }

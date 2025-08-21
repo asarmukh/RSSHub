@@ -4,12 +4,11 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"net/url"
-	"strings"
-
 	"rsshub/adapter/postgres"
 	"rsshub/internal/config"
 	"rsshub/internal/db"
+	"rsshub/internal/helper"
+	"strings"
 )
 
 func Add(args []string) error {
@@ -26,7 +25,7 @@ func Add(args []string) error {
 		return fmt.Errorf("both --name and --url are required")
 	}
 
-	if _, err := url.ParseRequestURI(feedURL); err != nil {
+	if err := helper.IsValidURL(feedURL); err != nil {
 		return fmt.Errorf("invalid feed URL: %w", err)
 	}
 

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 )
@@ -26,7 +27,11 @@ func (c *Client) SetInterval(d time.Duration) (time.Duration, error) {
 		Old string `json:"old"`
 		New string `json:"new"`
 	}
+
 	_ = json.NewDecoder(resp.Body).Decode(&r)
+
+	log.Printf("response fields: %s, %s", r.Old, r.New)
+
 	if r.Old != "" {
 		if old, err := time.ParseDuration(r.Old); err == nil {
 			return old, nil

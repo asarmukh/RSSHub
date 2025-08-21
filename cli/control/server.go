@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 	"net"
 	"net/http"
-	"time"
-
 	"rsshub/domain"
+	"time"
 )
 
 var ErrAlreadyRunning = errors.New("already running")
@@ -45,6 +45,7 @@ func (s *Server) handleSetInterval(w http.ResponseWriter, r *http.Request) {
 	var req struct {
 		Duration string `json:"duration"`
 	}
+
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
@@ -54,6 +55,9 @@ func (s *Server) handleSetInterval(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, fmt.Sprintf("invalid duration: %v", err), http.StatusBadRequest)
 		return
 	}
+
+	log.Printf("duration: %s", req.Duration)
+
 	old := s.agg.CurrentInterval()
 	s.agg.SetInterval(d)
 	_ = json.NewEncoder(w).Encode(map[string]interface{}{"ok": true, "old": old.String(), "new": d.String()})

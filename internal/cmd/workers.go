@@ -3,7 +3,6 @@ package cmd
 import (
 	"flag"
 	"fmt"
-
 	"rsshub/cli/control"
 	"rsshub/internal/config"
 )
@@ -15,8 +14,8 @@ func SetWorkers(args []string) error {
 		return err
 	}
 
-	if *count <= 0 {
-		return fmt.Errorf("usage: rsshub set-workers --count N (N > 0)")
+	if *count <= 0 || *count > 15 {
+		return fmt.Errorf("number of workers should be between 1 and 15")
 	}
 
 	c := control.NewClient(config.Load().ControlAddr)
