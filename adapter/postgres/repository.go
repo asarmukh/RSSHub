@@ -3,9 +3,8 @@ package postgres
 import (
 	"context"
 	"database/sql"
-	"time"
-
 	"rsshub/domain"
+	"time"
 )
 
 type Repository struct{ db *sql.DB }

@@ -5,9 +5,8 @@ import (
 	"encoding/xml"
 	"io"
 	"net/http"
-	"time"
-
 	"rsshub/domain"
+	"time"
 )
 
 type HTTPFetcher struct{ client *http.Client }

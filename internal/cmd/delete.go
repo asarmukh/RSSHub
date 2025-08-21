@@ -4,11 +4,10 @@ import (
 	"context"
 	"flag"
 	"fmt"
-	"strings"
-
 	"rsshub/adapter/postgres"
 	"rsshub/internal/config"
 	"rsshub/internal/db"
+	"strings"
 )
 
 func Delete(args []string) error {

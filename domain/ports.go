@@ -27,7 +27,6 @@ type RSSFetcher interface {
 type Aggregator interface {
 	Start(ctx context.Context) error
 	Stop() error
-
 	SetInterval(d time.Duration)
 	Resize(workers int) error
 	CurrentInterval() time.Duration

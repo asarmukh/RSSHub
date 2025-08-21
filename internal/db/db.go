@@ -3,9 +3,8 @@ package db
 import (
 	"database/sql"
 	"fmt"
-	"time"
-
 	"rsshub/internal/config"
+	"time"
 )
 
 func OpenDB(cfg config.Config) (*sql.DB, error) {
